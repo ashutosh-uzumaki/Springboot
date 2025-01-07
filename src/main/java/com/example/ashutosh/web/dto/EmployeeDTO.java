@@ -1,5 +1,8 @@
 package com.example.ashutosh.web.dto;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
 import java.time.LocalDate;
 
 public class EmployeeDTO {
@@ -56,5 +59,9 @@ public class EmployeeDTO {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public boolean getActive() {
+        return isActive;
     }
 }

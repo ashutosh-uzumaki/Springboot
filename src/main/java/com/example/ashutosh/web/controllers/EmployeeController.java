@@ -1,6 +1,10 @@
 package com.example.ashutosh.web.controllers;
 
 import com.example.ashutosh.web.dto.EmployeeDTO;
+import com.example.ashutosh.web.entities.Employee;
+import com.example.ashutosh.web.repository.EmployeeRepo;
+import com.example.ashutosh.web.services.EmployeeService;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -10,20 +14,38 @@ import java.util.*;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-    @GetMapping
-    public String getAllEmployees(@RequestParam(required = false) Integer age){
-        return "Hi employee with age: "+age;
+    private final EmployeeService employeeService;
+    EmployeeController(EmployeeService employeeService){
+        this.employeeService = employeeService;
+    }
+    @GetMapping()
+    public List<EmployeeDTO> getAllEmployees(@RequestParam(required = false) Integer age){
+        return employeeService.getAllEmployees();
     }
 
     @GetMapping("/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable Long employeeId){
-        return new EmployeeDTO(1l, "Ashutosh", 26, LocalDate.now(), true);
+        return employeeService.getEmployee(employeeId);
     }
 
     @PostMapping()
-    public EmployeeDTO addEmployee(@RequestBody EmployeeDTO employeeDTO){
+    public EmployeeDTO addEmployee(@RequestBody Employee employee){
 //        return "Created Employee: "+employeeDTO.getName();
-        employeeDTO.setJoiningDate(LocalDate.now());
-        return employeeDTO;
+        return employeeService.save(employee);
+    }
+
+    @PutMapping("/{employeeId}")
+    public EmployeeDTO updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long employeeId){
+        return employeeService.updateEmployee(employeeDTO, employeeId);
+    }
+
+    @DeleteMapping("/{employeeId}")
+    public void deleteEmployeeById(@PathVariable Long employeeId){
+        employeeService.deleteEmployeeById(employeeId);
+    }
+
+    @PatchMapping("/{employeeId}")
+    public EmployeeDTO patchData(@RequestBody Map<String, Object> updates, @PathVariable Long employeeId){
+        return employeeService.patchData(updates, employeeId);
     }
 }
