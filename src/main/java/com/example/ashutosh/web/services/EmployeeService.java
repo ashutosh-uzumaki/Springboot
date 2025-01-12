@@ -26,23 +26,21 @@ public class EmployeeService {
         return employeeDTOS;
     }
 
-    public EmployeeDTO getEmployee(Long id){
-        Optional<Employee> employee = employeeRepo.findById(id);
-        if(employee.isPresent()){
-            return mapper.map(employee.get(), EmployeeDTO.class);
-        }
-        return null;
+    public Optional<EmployeeDTO> getEmployee(Long id){
+        return employeeRepo.findById(id).map(employee -> mapper.map(employee, EmployeeDTO.class));
     }
 
-    public EmployeeDTO save(Employee employee){
-        Employee savedEmployee = employeeRepo.save(employee);
-        return mapper.map(savedEmployee, EmployeeDTO.class);
+    public EmployeeDTO save(EmployeeDTO employeeDTO){
+        Employee employeeEntity =  mapper.map(employeeDTO, Employee.class);
+        Employee saved = employeeRepo.save(employeeEntity);
+        return mapper.map(saved, EmployeeDTO.class);
     }
 
     public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO, Long employeeId){
         Employee employee = mapper.map(employeeDTO, Employee.class);
         employee.setId(employeeId);
-        EmployeeDTO updatedEmployee = save(employee);
+        EmployeeDTO updatedEmployee = mapper.map(employee, EmployeeDTO.class);
+        save(updatedEmployee);
         return updatedEmployee;
     }
 

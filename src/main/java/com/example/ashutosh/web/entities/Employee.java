@@ -20,4 +20,5 @@ public class Employee {
     private LocalDate joiningDate;
 
     private boolean isActive;
+    private String email;
 }
